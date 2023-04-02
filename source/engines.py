@@ -162,7 +162,7 @@ def train_fn(
         
     df.loc['Average'] = df.mean()
     df.index.names = ['Class']
-    df.to_csv("../../drive/Shareddrives/TFG_INFO/Codigo/Casos/Chapman/PRUEBA.csv")
+    # df.to_csv("../../drive/Shareddrives/TFG_INFO/Codigo/Casos/Chapman/PRUEBA.csv")
     # df.to_csv(f"{pathModelos}Chapman/PRUEBA.csv")
         
     ax = pyplot.subplot(111, frame_on=False) # no visible frame
