@@ -162,14 +162,15 @@ def train_fn(
         
     df.loc['Average'] = df.mean()
     df.index.names = ['Class']
-    df.to_csv("../../drive/Shareddrives/TFG_INFO/Codigo/Casos/Chapman/tabla.csv")
-    
+    df.to_csv("../../drive/Shareddrives/TFG_INFO/Codigo/Casos/Chapman/PRUEBA.csv")
+    # df.to_csv(f"{pathModelos}Chapman/PRUEBA.csv")
+        
     ax = pyplot.subplot(111, frame_on=False) # no visible frame
     ax.xaxis.set_visible(False)  # hide the x axis
     ax.yaxis.set_visible(False)  # hide the y axis
     table(ax, df)  # where df is your data frame
 
-    pyplot.savefig("../../drive/Shareddrives/TFG_INFO/Codigo/Casos/Chapman/tabla.png")
+    # pyplot.savefig("../../drive/Shareddrives/TFG_INFO/Codigo/Casos/Chapman/tabla.png")
     print("#################################\n")
     
     

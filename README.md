@@ -15,5 +15,12 @@ python3 tools/train.py --dataset "CPSC-2018" --num_classes 9 --multilabel
 
 ### **Casos CPSC-2018**
 Los casos guardados en CPSC-2018 son divididos por 200 y sin dividir, los que no han sido divididos son los que acaban en OG (original).
+
 #### **Entrenamiento**
 Para el entrenamiento y predicción los casos están divididos en tres subconjuntos, train, pred y val. En el train están la mayor parte de los casos, luego otra parte está en validación y finalmente los casos de la tabla de enfermedades están únicamente en pred.
+
+#### **Aumentar cantidad de datos de Github**
+git config http.postBuffer 1048576000
+
+#### **Copiar datos**
+cp -R -u -p ./scratch/tfg_luis_2223/drive/Shareddrives/TFG_INFO/Codigo/Casos/Chapman/CasosNumpy/ ./scratch/tfg_luis_2223/LightX3ECGPrivate/datasets/Casos/Chapman/CasosNumpy/
