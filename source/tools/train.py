@@ -28,21 +28,21 @@ config = {
 train_loaders = {
     "train":torch.utils.data.DataLoader(
         ECGDataset(
-            df_path = f"{configVars.pathCasos}{args.dataset}/train.csv", data_path = f"{configVars.pathCasos}{args.dataset}/CasosNumpy", 
+            df_path = f"{configVars.pathCasos}{args.dataset}/train.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy", 
             config = config, 
             augment = True, 
         ), 
-        num_workers = 8, batch_size = 56, 
+        num_workers = 8, batch_size = 63, #63
         shuffle = True
         ,drop_last=True
     ), 
     "val":torch.utils.data.DataLoader(
         ECGDataset(
-            df_path = f"{configVars.pathCasos}{args.dataset}/val.csv", data_path = f"{configVars.pathCasos}{args.dataset}/CasosNumpy", 
+            df_path = f"{configVars.pathCasos}{args.dataset}/val.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy", 
             config = config, 
             augment = False, 
         ), 
-        num_workers = 8, batch_size = 56, 
+        num_workers = 8, batch_size = 56, #56
         shuffle = False
         ,drop_last=True
     ), 
@@ -82,7 +82,7 @@ if not os.path.exists(save_ckp_dir):
 train_fn(
     train_loaders, 
     model, 
-    num_epochs = 1, 
+    num_epochs = 5, 
     config = config, 
     criterion = criterion, 
     optimizer = optimizer, 
