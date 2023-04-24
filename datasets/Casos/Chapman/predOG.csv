@@ -1,7 +1,0 @@
-id,age,sex,label,r_count,length
-Caso1-NoBL,80,0,0,10,5000
-Caso2-NoBL,80,0,2,8,5000
-Caso3-NoBL,80,0,2,9,5000
-Caso4-NoBL,80,0,0,0,5000
-Caso5-NoBL,80,0,0,0,5000
-Caso6-NoBL,80,0,0,11,5000

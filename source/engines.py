@@ -59,7 +59,7 @@ def train_fn(
         #         np.mean(epoch_loss), np.mean(epoch_f1)
         #     ))
         
-        print("########################PRIMER PUNTO############################")
+        print("########################PRIMER PUNTO_TRAIN############################")
         print(f"Forma de las running_labels: {np.array(running_labels).shape}\n")
         print(running_labels)
         print(f"\nForma de las running_preds: {np.array(running_preds).shape}\n")
@@ -79,7 +79,7 @@ def train_fn(
                 running_loss = running_loss + loss.item()*ecgs.size(0)
                 labels, preds = list(labels.data.cpu().numpy()), list(torch.max(logits, 1)[1].detach().cpu().numpy()) if not config["is_multilabel"] else list(np.where(torch.sigmoid(logits).detach().cpu().numpy() >= 0.50, 1, 0))
                 running_labels.extend(labels), running_preds.extend(preds)
-            print("#######################SEGUNDO PUNTO#############################")
+            print("#######################SEGUNDO PUNTO_VAL#############################")
             print(f"Forma de las running_labels: {np.array(running_labels).shape}\n")
             print(running_labels)
             print(f"\nForma de las running_preds: {np.array(running_preds).shape}\n")
@@ -134,18 +134,36 @@ def train_fn(
             #Determinas si las predicciones cumplen con el umbral óptimo, los umbrales óptimos son los que tienen mejor f1_score y menor pérdida
             np.where(running_preds[:, cls] >= optimal_thresholds[cls], 1, 0) for cls in range(running_preds.shape[1])
         ]).transpose()
+    else:
+        #En este caso como solo nos interesa los valores obtenidos para cada enfermedad, no necesitamos hacer lo mismo que en la prediccion. En la prediccion
+        #modificamos la linea de 'labels,preds = list()...' para que nos devuelva todas las probabilidades calculadas aunque no sea multilabel, con el fin único de conocer
+        #las probabilidades con las que se ha predicho que es una enfermedad y luego pasamos a quedarnos con la enfermedad con más probabilidad, mientras que aquí
+        #aunque internamente haga las probabilidades, se calcula directamente la enfermedad. (línea 119 del archivo actualmente)
+        running_labels, running_preds = np.array(running_labels), np.array(running_preds)
+    
     val_loss = running_loss/len(train_loaders["val"].dataset)
     val_prec, val_recall, val_f1, _ = precision_recall_fscore_support(
         running_labels, running_preds
-        , average = "macro"
+        , average = None
     )
     # print("{:<5} - loss:{:.4f}, f1:{:.4f}".format(
     #     "val", 
     #     np.mean(val_loss), np.mean(val_f1)
     # ))
     print("############Validation###########\n")
-    print(f"\nPrecision:{val_prec}\n{val_prec}\nRecall:{val_recall}\n{val_recall}\nF1:{val_f1}\n{val_f1}\n")
+    # print(f"\nPrecision:{val_prec.shape}\n{val_prec.shape}\nRecall:{val_recall.shape}\n{val_recall.shape}\nF1:{val_f1.shape}\n{val_f1.shape}\n")
     print(np.array([val_loss,val_prec,val_recall,val_f1]))
+    # df = pandas.DataFrame(
+    #     [{
+    #         'Precision': val_prec,
+    #         'Recall': val_recall,
+    #         'F1': val_f1 
+    #     }],
+    #     index=["AFIB","GSVT","SB","SR"]
+    # )
+    
+    from IPython.display import display
+    
     # df = pandas.DataFrame(
     #     [{
     #         'Precision': val_prec,
@@ -155,14 +173,15 @@ def train_fn(
     #     index=["Normal","AF","I-AVB","LBBB","RBBB","PAC","PVC","STD","STE"]
     # )
     # df["Precision"],df["Recall"],df["F1"] = val_prec,val_recall,val_f1
-    # if val_prec.shape[0] == 9:
-    #     df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["Normal","AF","I-AVB","LBBB","RBBB","PAC","PVC","STD","STE"])
-    # else:
-    #     df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["Label_0","Label_1","Label_2","Label_3"])
+    if val_prec.shape[0] == 9:
+        df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["Normal","AF","I-AVB","LBBB","RBBB","PAC","PVC","STD","STE"])
+    else:
+        df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["Label_0","Label_1","Label_2","Label_3"])
         
-    # df.loc['Average'] = df.mean()
-    # df.index.names = ['Class']
-    # # df.to_csv("../../drive/Shareddrives/TFG_INFO/Codigo/Casos/Chapman/PRUEBA.csv")
+    df.loc['Average'] = df.mean()
+    df.index.names = ['Class']
+    display(df)
+    # df.to_csv("../../drive/Shareddrives/TFG_INFO/Codigo/Casos/Chapman/PRUEBA.csv")
     # # df.to_csv(f"{pathModelos}Chapman/PRUEBA.csv")
         
     # ax = pyplot.subplot(111, frame_on=False) # no visible frame
@@ -204,8 +223,8 @@ def predict(
     training_verbose = True, 
 ):
     model = torch.load(f"{save_ckp_dir}/best.ptl", map_location = "cuda")
+    # model = torch.load(f"{save_ckp_dir}/best.ptl", map_location = "cuda")
     model = nn.DataParallel(model, device_ids = config["device_ids"])
-    
     with torch.no_grad():
         model.eval()
         running_labels, running_preds = [], []
@@ -221,6 +240,7 @@ def predict(
             logits = model(ecgs)
 
             #labels son las etiquetas reales y preds las que ha predicho el modelo
+            #No tiene sentido hacer unos tresholds sin tener las clasificaciones correctas de las enfermedades, seguramente eliminar running_labels y labels
             labels, preds = list(labels.data.cpu().numpy()), list(torch.sigmoid(logits).detach().cpu().numpy()) if not config["is_multilabel"] else list(torch.sigmoid(logits).detach().cpu().numpy())
             running_labels.extend(labels), running_preds.extend(preds)
     print(f"\n{np.shape(running_preds)}\n")#Ahora mismo lo que tiene es un 18,4 es decir 18 arrays con 4 probabilidades cada uno, cada una correspondiente a un grupo de enfermedades
@@ -234,6 +254,7 @@ def predict(
         print(f"El reshapeo del array{running_preds.shape}")
         optimal_thresholds = thresholds_search(running_labels, running_preds)
         running_probs = running_preds
+        #No tiene sentido hacer unos tresholds sin tener las clasificaciones correctas de las enfermedades
         running_preds = np.stack([
             np.where(running_preds[:, cls] >= optimal_thresholds[cls], 1, 0) for cls in range(running_preds.shape[1])
         ]).transpose()

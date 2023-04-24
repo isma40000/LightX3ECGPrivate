@@ -82,7 +82,7 @@ if not os.path.exists(save_ckp_dir):
 train_fn(
     train_loaders, 
     model, 
-    num_epochs = 5, 
+    num_epochs = 1, 
     config = config, 
     criterion = criterion, 
     optimizer = optimizer, 

@@ -19,7 +19,6 @@ config = {
         6, 
     ], 
     "ecg_length":5000, 
-
     "is_multilabel":args.multilabel, 
     "device_ids":list(range(args.num_gpus)), 
 }
@@ -27,12 +26,14 @@ config = {
 train_loaders = {
     "pred":torch.utils.data.DataLoader(
         ECGDataset(
-            df_path = f"{configVars.pathCasos}{args.dataset}/pred.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy", 
+            # df_path = f"{configVars.pathCasos}{args.dataset}/predOHE-9Labels.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy-1000",
+            df_path = f"{configVars.pathCasos}{args.dataset}/pred{args.dataset}.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy-1000", 
             config = config, 
             augment = False, 
         ), 
         num_workers = 8, batch_size = 64, 
         shuffle = False
+        # ,drop_last=True
     )
 }
 
