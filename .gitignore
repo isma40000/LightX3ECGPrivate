@@ -1,6 +1,13 @@
 datasets/Casos/Chapman/CasosNuestros/
 datasets/Casos/Chapman/CasosNumpyEntreMil/
-datasets/Casos/Chapman/ECGDataRaw/
-datasets/Casos/Chapman/ECGDataRawNpy-1000/
-datasets/Casos/Chapman/ECGDataRawNpy-NoBaseLine/
-datasets/Casos/Chapman/ECGDataRawNpy/
+datasets/Casos/Chapman/CasosNumpyEntreMil/*MUSE*
+datasets/Casos/Chapman/CasosNumpy/*MUSE*
+datasets/Casos/Chapman/ECGDataRawUp/
+datasets/Casos/Chapman/ECGDataRaw/*MUSE*
+datasets/Casos/Chapman/ECGDataRawNpy-1000Up/
+datasets/Casos/Chapman/ECGDataRawNpy-1000/*MUSE*
+datasets/Casos/Chapman/ECGDataRawNpy-NoBaseLineUp/
+datasets/Casos/Chapman/ECGDataRawNpy-1000-NoBL/*MUSE*
+datasets/Casos/Chapman/ECGDataRawNpyUp/
+datasets/Casos/Chapman/ECGDataRawNpy/*MUSE*
+datasets/Casos/Chapman/ECGDataRaw/ECGDataRaw.zip

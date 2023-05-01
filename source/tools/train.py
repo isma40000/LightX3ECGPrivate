@@ -28,7 +28,8 @@ config = {
 train_loaders = {
     "train":torch.utils.data.DataLoader(
         ECGDataset(
-            df_path = f"{configVars.pathCasos}{args.dataset}/train.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy", 
+            df_path = f"{configVars.pathCasos}{args.dataset}/train.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy-1000-NoBL", 
+            # df_path = f"{configVars.pathCasos}{args.dataset}/train.csv", data_path = f"{configVars.pathCasos}{args.dataset}/CasosNumpy", 
             config = config, 
             augment = True, 
         ), 
@@ -38,7 +39,8 @@ train_loaders = {
     ), 
     "val":torch.utils.data.DataLoader(
         ECGDataset(
-            df_path = f"{configVars.pathCasos}{args.dataset}/val.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy", 
+            df_path = f"{configVars.pathCasos}{args.dataset}/val.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy-1000-NoBL", 
+            # df_path = f"{configVars.pathCasos}{args.dataset}/val.csv", data_path = f"{configVars.pathCasos}{args.dataset}/CasosNumpy", 
             config = config, 
             augment = False, 
         ), 
@@ -82,7 +84,7 @@ if not os.path.exists(save_ckp_dir):
 train_fn(
     train_loaders, 
     model, 
-    num_epochs = 1, 
+    num_epochs = 70, 
     config = config, 
     criterion = criterion, 
     optimizer = optimizer, 

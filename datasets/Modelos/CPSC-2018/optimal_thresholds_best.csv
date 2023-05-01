@@ -1,0 +1,10 @@
+,Threshold
+Normal,0.6
+AF,0.8
+I-AVB,0.5
+LBBB,0.15
+RBBB,0.5
+PAC,0.4
+PVC,0.5
+STD,0.55
+STE,0.2

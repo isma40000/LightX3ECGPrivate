@@ -1,0 +1,7 @@
+id,age,sex,label_0,label_1,label_2,label_3,label_4,label_5,label_6,label_7,label_8,r_count,length
+Caso1-NoBL,80,0,1,0,0,0,0,0,0,0,0,10,5000
+Caso2-NoBL,80,0,0,0,0,0,0,0,0,0,0,8,5000
+Caso3-NoBL,80,0,1,0,0,0,0,0,0,0,0,9,5000
+Caso4-NoBL,80,0,0,0,0,1,0,0,0,0,0,0,5000
+Caso5-NoBL,80,0,0,0,1,0,0,0,0,0,0,0,5000
+Caso6-NoBL,80,0,0,1,0,0,0,0,0,1,1,11,5000

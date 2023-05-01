@@ -26,8 +26,8 @@ config = {
 train_loaders = {
     "pred":torch.utils.data.DataLoader(
         ECGDataset(
-            # df_path = f"{configVars.pathCasos}{args.dataset}/predOHE-9Labels.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy-1000",
-            df_path = f"{configVars.pathCasos}{args.dataset}/pred{args.dataset}.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy-1000", 
+            df_path = f"{configVars.pathCasos}{args.dataset}/pred.csv", data_path = f"{configVars.pathCasos}{args.dataset}/CasosNumpy",
+            # df_path = f"{configVars.pathCasos}{args.dataset}/pred{args.dataset}.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy-1000", 
             config = config, 
             augment = False, 
         ), 
