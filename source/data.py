@@ -45,6 +45,7 @@ class ECGDataset(torch.utils.data.Dataset):
         ecg = pad_sequences(ecg, self.config["ecg_length"], "float64", 
             "post", "post", 
         )
+        
         if self.augment:
             ecg = self.drop_lead(ecg)
         ecg = torch.tensor(ecg).float()

@@ -128,9 +128,13 @@ def train_fn(
     
     if val_prec.shape[0] == 9:
         df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["Normal","AF","I-AVB","LBBB","RBBB","PAC","PVC","STD","STE"])
-    else:
+    elif val_prec.shape[0] == 4:
         # df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["Label_0","Label_1","Label_2","Label_3"])
         df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["AFIB","GSVT","SB","SR"])
+    elif val_prec.shape[0] == 6:
+        df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["1dAVb","RBBB","LBBB","SB","AF","ST"])
+    else:
+        df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"])
         
     df.loc['Average'] = df.mean()
     df.index.names = ['Class']

@@ -19,7 +19,7 @@ config = {
         0, 1, 
         6, 
     ], 
-    "ecg_length":5000, 
+    "ecg_length":4096, 
 
     "is_multilabel":args.multilabel, 
     "device_ids":list(range(args.num_gpus)), 
@@ -28,7 +28,7 @@ config = {
 train_loaders = {
     "train":torch.utils.data.DataLoader(
         ECGDataset(
-            df_path = f"{configVars.pathCasos}{args.dataset}/train.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy-1000-NoBL", 
+            df_path = f"{configVars.pathModelos}/train.csv", data_path = f"{configVars.pathCasos}", 
             # df_path = f"{configVars.pathCasos}{args.dataset}/train.csv", data_path = f"{configVars.pathCasos}{args.dataset}/CasosNumpy", 
             config = config, 
             augment = True, 
@@ -39,7 +39,7 @@ train_loaders = {
     ), 
     "val":torch.utils.data.DataLoader(
         ECGDataset(
-            df_path = f"{configVars.pathCasos}{args.dataset}/val.csv", data_path = f"{configVars.pathCasos}{args.dataset}/ECGDataRawNpy-1000-NoBL", 
+            df_path = f"{configVars.pathModelos}/val.csv", data_path = f"{configVars.pathCasos}", 
             # df_path = f"{configVars.pathCasos}{args.dataset}/val.csv", data_path = f"{configVars.pathCasos}{args.dataset}/CasosNumpy", 
             config = config, 
             augment = False, 
@@ -84,7 +84,7 @@ if not os.path.exists(save_ckp_dir):
 train_fn(
     train_loaders, 
     model, 
-    num_epochs = 70, 
+    num_epochs = 1, 
     config = config, 
     criterion = criterion, 
     optimizer = optimizer, 
