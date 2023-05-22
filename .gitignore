@@ -11,3 +11,5 @@ datasets/Casos/Chapman/ECGDataRawNpy-1000-NoBL/*MUSE*
 datasets/Casos/Chapman/ECGDataRawNpyUp/
 datasets/Casos/Chapman/ECGDataRawNpy/*MUSE*
 datasets/Casos/Chapman/ECGDataRaw/ECGDataRaw.zip
+source/__pycache__/
+source/nets/__pycache__/
