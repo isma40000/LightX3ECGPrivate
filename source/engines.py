@@ -7,6 +7,7 @@ import configVars
 
 
 def train_fn(
+    dataset,
     train_loaders, 
     model, 
     num_epochs, 
@@ -81,7 +82,8 @@ def train_fn(
             best_f1 = epoch_f1; 
             best_prec = epoch_prec; 
             best_recall = epoch_recall; 
-            torch.save(model.module, f"{save_ckp_dir}/best.ptl")                
+            torch.save(model.module, f"{save_ckp_dir}/best.ptl")
+            torch.save(model.module, f"{save_ckp_dir}/model_{dataset}_{num_epoch}")                
 
 
     #En esta evaluación se está prediciendo realmente
@@ -105,8 +107,15 @@ def train_fn(
         running_labels, running_preds = np.array(running_labels), np.array(running_preds)
         #Te quedas con los umbrales que tienen un mejor f1_score
         optimal_thresholds = thresholds_search(running_labels, running_preds)
-        df = pandas.DataFrame(np.array(optimal_thresholds).transpose(),index=["Normal","AF","I-AVB","LBBB","RBBB","PAC","PVC","STD","STE"],columns=["Threshold"])
-        df.to_csv(f"{configVars.pathModelos}CPSC-2018/optimal_thresholds_best.csv")
+        
+        if len(optimal_thresholds) == 9:
+            df = pandas.DataFrame(np.array(optimal_thresholds).transpose(),index=["Normal","AF","I-AVB","LBBB","RBBB","PAC","PVC","STD","STE"],columns=["Threshold"])
+        elif len(optimal_thresholds) == 6:
+            df = pandas.DataFrame(np.array(optimal_thresholds).transpose(),index=["1dAVb", "RBBB", "LBBB", "SB", "AF", "ST"],columns=["Threshold"])
+        else:
+            df = pandas.DataFrame(np.array(optimal_thresholds).transpose(),columns=["Threshold"])
+            
+        df.to_csv(f"{save_ckp_dir}/Thresholds_{dataset}_{num_epoch}.csv")
         running_preds = np.stack([
             #Determinas si las predicciones cumplen con el umbral óptimo, los umbrales óptimos son los que tienen mejor f1_score y menor pérdida
             np.where(running_preds[:, cls] >= optimal_thresholds[cls], 1, 0) for cls in range(running_preds.shape[1])
@@ -125,20 +134,27 @@ def train_fn(
     )
     
     from IPython.display import display
+    print(val_prec.shape[0])
+    print(val_prec.shape)
     
     if val_prec.shape[0] == 9:
-        df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["Normal","AF","I-AVB","LBBB","RBBB","PAC","PVC","STD","STE"])
+        indices = ["Normal", "AF", "I-AVB", "LBBB", "RBBB", "PAC", "PVC", "STD", "STE"]
     elif val_prec.shape[0] == 4:
-        # df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["Label_0","Label_1","Label_2","Label_3"])
-        df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["AFIB","GSVT","SB","SR"])
+        indices = ["AFIB", "GSVT", "SB", "SR"]
     elif val_prec.shape[0] == 6:
-        df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"],index=["1dAVb","RBBB","LBBB","SB","AF","ST"])
+        indices = ["1dAVb", "RBBB", "LBBB", "SB", "AF", "ST"]
     else:
-        df = pandas.DataFrame(np.array([val_prec,val_recall,val_f1]).transpose(),columns=["Precision","Recall","F1"])
+        indices = None  # Opcional: manejar un caso por defecto si no se cumple ninguna condición
+        
+    if indices is not None:
+        df = pandas.DataFrame(np.array([val_prec, val_recall, val_f1]).transpose(), columns=["Precision", "Recall", "F1"], index=indices)
+    else:
+        df = pandas.DataFrame(np.array([val_prec, val_recall, val_f1]).transpose(), columns=["Precision", "Recall", "F1"])
         
     df.loc['Average'] = df.mean()
     df.index.names = ['Class']
     display(df)
+    df.to_csv(f"{configVars.pathResultados}{dataset}/Resultados_{dataset}_{num_epochs}.csv")
     
     
 ############################################################################################
@@ -164,6 +180,7 @@ def get_r_count(ecg):
 ############################################################################################
 
 def predict(
+    dataset,
     train_loaders, 
     model, 
     config,
@@ -187,7 +204,7 @@ def predict(
         running_labels, running_preds = np.array(running_labels), np.array(running_preds)
         #Te quedas con los umbrales que tienen un mejor f1_score
         # optimal_thresholds = thresholds_search(running_labels, running_preds)
-        optimal_thresholds = pandas.read_csv(f"{configVars.pathModelos}CPSC-2018/optimal_thresholds_best.csv",index_col=0,delimiter=',')
+        optimal_thresholds = pandas.read_csv(f"{configVars.pathModelos}{dataset}/optimal_thresholds_best.csv",index_col=0,delimiter=',')
         optimal_thresholds = optimal_thresholds.to_numpy()
         running_probs = running_preds
         #No tiene sentido hacer unos tresholds sin tener las clasificaciones correctas de las enfermedades

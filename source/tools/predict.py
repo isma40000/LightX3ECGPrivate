@@ -46,6 +46,7 @@ if not os.path.exists(save_ckp_dir):
     os.makedirs(save_ckp_dir)
 
 predict(
+    args.dataset,
     train_loaders, 
     model, 
     config,

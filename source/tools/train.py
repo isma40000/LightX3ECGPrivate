@@ -28,7 +28,7 @@ config = {
 train_loaders = {
     "train":torch.utils.data.DataLoader(
         ECGDataset(
-            df_path = f"{configVars.pathModelos}/train.csv", data_path = f"{configVars.pathCasos}", 
+            df_path = f"{configVars.pathCasos}{args.dataset}/train.csv", data_path = f"../../Examenes_Antonio_NPY/", 
             # df_path = f"{configVars.pathCasos}{args.dataset}/train.csv", data_path = f"{configVars.pathCasos}{args.dataset}/CasosNumpy", 
             config = config, 
             augment = True, 
@@ -39,7 +39,7 @@ train_loaders = {
     ), 
     "val":torch.utils.data.DataLoader(
         ECGDataset(
-            df_path = f"{configVars.pathModelos}/val.csv", data_path = f"{configVars.pathCasos}", 
+            df_path = f"{configVars.pathCasos}{args.dataset}/val.csv", data_path = f"{configVars.pathCasos}", 
             # df_path = f"{configVars.pathCasos}{args.dataset}/val.csv", data_path = f"{configVars.pathCasos}{args.dataset}/CasosNumpy", 
             config = config, 
             augment = False, 
@@ -82,9 +82,10 @@ if not os.path.exists(save_ckp_dir):
 # print("####################################################################")
 
 train_fn(
+    args.dataset,
     train_loaders, 
     model, 
-    num_epochs = 1, 
+    num_epochs = 10, 
     config = config, 
     criterion = criterion, 
     optimizer = optimizer, 
