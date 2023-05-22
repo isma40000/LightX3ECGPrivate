@@ -83,7 +83,7 @@ def train_fn(
             best_prec = epoch_prec; 
             best_recall = epoch_recall; 
             torch.save(model.module, f"{save_ckp_dir}/best.ptl")
-            torch.save(model.module, f"{save_ckp_dir}/model_{dataset}_{num_epoch}")                
+            torch.save(model.module, f"{save_ckp_dir}/model_{dataset}_{num_epochs}")                
 
 
     #En esta evaluación se está prediciendo realmente

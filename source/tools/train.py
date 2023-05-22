@@ -33,7 +33,7 @@ train_loaders = {
             config = config, 
             augment = True, 
         ), 
-        num_workers = 8, batch_size = 63, #63
+        num_workers = 8, batch_size = 100, #63
         shuffle = True
         ,drop_last=True
     ), 
@@ -44,7 +44,7 @@ train_loaders = {
             config = config, 
             augment = False, 
         ), 
-        num_workers = 8, batch_size = 56, #56
+        num_workers = 8, batch_size = 100, #56
         shuffle = False
         ,drop_last=True
     ), 
