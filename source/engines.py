@@ -4,7 +4,7 @@ from libs import *
 from utils import *
 import neurokit2 as nk
 import configVars
-
+from IPython.display import display
 
 def train_fn(
     dataset,
@@ -19,7 +19,8 @@ def train_fn(
     training_verbose = True, 
 ):
     print("\nStart Training ...\n" + " = "*16)
-    model = model.cuda()
+    # model = model.cuda()
+    model = torch.load(f"{save_ckp_dir}/best.ptl", map_location = "cuda")
     model = nn.DataParallel(model, device_ids = config["device_ids"])
 
     best_f1 = 0.0
@@ -83,7 +84,7 @@ def train_fn(
             best_prec = epoch_prec; 
             best_recall = epoch_recall; 
             torch.save(model.module, f"{save_ckp_dir}/best.ptl")
-            torch.save(model.module, f"{save_ckp_dir}/model_{dataset}_{num_epochs}")                
+            torch.save(model.module, f"{save_ckp_dir}/model_{dataset}_{num_epochs}.ptl")                
 
 
     #En esta evaluación se está prediciendo realmente
@@ -133,7 +134,6 @@ def train_fn(
         , average = None
     )
     
-    from IPython.display import display
     print(val_prec.shape[0])
     print(val_prec.shape)
     
@@ -153,8 +153,8 @@ def train_fn(
         
     df.loc['Average'] = df.mean()
     df.index.names = ['Class']
-    display(df)
     df.to_csv(f"{configVars.pathResultados}{dataset}/Resultados_{dataset}_{num_epochs}.csv")
+    display(df)
     
     
 ############################################################################################

@@ -85,7 +85,7 @@ train_fn(
     args.dataset,
     train_loaders, 
     model, 
-    num_epochs = 10, 
+    num_epochs = 5, 
     config = config, 
     criterion = criterion, 
     optimizer = optimizer, 
