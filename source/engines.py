@@ -19,8 +19,8 @@ def train_fn(
     training_verbose = True, 
 ):
     print("\nStart Training ...\n" + " = "*16)
-    # model = model.cuda()
-    model = torch.load(f"{save_ckp_dir}/best.ptl", map_location = "cuda")
+    model = model.cuda()
+    # model = torch.load(f"{save_ckp_dir}/best.ptl", map_location = "cuda")
     model = nn.DataParallel(model, device_ids = config["device_ids"])
 
     best_f1 = 0.0
@@ -116,7 +116,7 @@ def train_fn(
         else:
             df = pandas.DataFrame(np.array(optimal_thresholds).transpose(),columns=["Threshold"])
             
-        df.to_csv(f"{save_ckp_dir}/Thresholds_{dataset}_{num_epoch}.csv")
+        df.to_csv(f"{save_ckp_dir}/Thresholds_{dataset}_{num_epochs}.csv")
         running_preds = np.stack([
             #Determinas si las predicciones cumplen con el umbral óptimo, los umbrales óptimos son los que tienen mejor f1_score y menor pérdida
             np.where(running_preds[:, cls] >= optimal_thresholds[cls], 1, 0) for cls in range(running_preds.shape[1])
